@@ -27,6 +27,7 @@ class CDFTrackingDataSerializer(TrackingDataSerializer[CDFOutputs]):
             formation: the infered formation.
         """
         formation = ""
+        default_formation = "4-3-3"
         defender = midfielder = attacker = 0
         for player in team_players:
             if player.starting_position.position_group == None:
@@ -48,6 +49,8 @@ class CDFTrackingDataSerializer(TrackingDataSerializer[CDFOutputs]):
                 defender += 1
         if defender + midfielder + attacker == 10:
             formation = f"{defender}-{midfielder}-{attacker}"
+        elif defender + midfielder + attacker != 10:
+            formation = default_formation
         return formation
 
     def serialize(self, dataset: TrackingDataset, outputs: CDFOutputs) -> bool:
@@ -122,7 +125,7 @@ class CDFTrackingDataSerializer(TrackingDataSerializer[CDFOutputs]):
             # Frame ID specified by the CDF
             frame_data["frame_id"] = frame_id
             # Original frame_id
-            frame_data["Original_frame_id"] = frame.frame_id
+            frame_data["original_frame_id"] = frame.frame_id
             # Timestamp
             frame_data["timestamp"] = str(
                 dataset.metadata.date + frame.timestamp
@@ -133,7 +136,7 @@ class CDFTrackingDataSerializer(TrackingDataSerializer[CDFOutputs]):
             # Update the start and end id for this period
             if period_start_frame_id[period_id] is None:
                 period_start_frame_id[period_id] = frame_data[
-                    "Original_frame_id"
+                    "original_frame_id"
                 ]
 
                 if (
@@ -154,10 +157,10 @@ class CDFTrackingDataSerializer(TrackingDataSerializer[CDFOutputs]):
                     period_id
                 ]
 
-            period_end_frame_id[period_id] = frame_data["Original_frame_id"]
+            period_end_frame_id[period_id] = frame_data["original_frame_id"]
 
             normalized_frame_id = (
-                frame_data["Original_frame_id"]
+                frame_data["original_frame_id"]
                 - period_start_frame_id[period_id]
             ) + period_offset[period_id]
 

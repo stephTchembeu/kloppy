@@ -37,8 +37,8 @@ class TestCDFSerializer:
         serializer = CDFTrackingDataSerializer()
 
         # Instantiate Validators
-        meta_validator = cdf.MetaSchemaValidator(schema="cdf/files/v{cdf.VERSION}/schema/meta.json")
-        tracking_validator = cdf.TrackingSchemaValidator(schema="cdf/files/v{cdf.VERSION}/schema/tracking.json")
+        meta_validator = cdf.MetaSchemaValidator(schema=f"cdf/files/v{cdf.VERSION}/schema/meta.json")
+        tracking_validator = cdf.TrackingSchemaValidator(schema=f"cdf/files/v{cdf.VERSION}/schema/tracking.json")
 
         with tempfile.NamedTemporaryFile(mode="w+b", suffix=".json", delete=False) as meta_file:
             # Initialize empty list for tracking files
